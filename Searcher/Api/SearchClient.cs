@@ -28,7 +28,15 @@ namespace Searcher.Api
 				Description = "Описание"
 			};
 
-			Context.Add(indicator);
+			var dict = new Dict
+			{
+				Ident = "currency",
+				Name = "Валюты",
+				Description = "Содержит в себе типы валют"
+			};
+
+			Context.Dicts.Add(dict);
+			Context.Indicators.Add(indicator);
 
 			await Context.SaveChangesAsync();
 		}

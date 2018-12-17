@@ -4,14 +4,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Searcher.Domain
 {
-	public class Indicator
+	public class Dict
 	{
 		[Key]
 		public Int32 Id { get; set; }
-		public String Ident { get; set; }
 		public String Name { get; set; }
+		public String Ident { get; set; }
 		public String Description { get; set; }
 
-		public virtual List<TechnicalIndicator> TechnicalIndicators { get; set; }
+		public virtual List<DictItem> DictItems { get; set; }
 	}
 }

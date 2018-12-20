@@ -1,38 +1,30 @@
-﻿using Searcher.Abstractions;
+﻿using Microsoft.Extensions.Hosting;
+using Searcher.Abstractions;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Searcher.Api
 {
-	public class SearchManager : ISearchManager
+	public class SearchManager : BackgroundService
 	{
 		private ISearchClient Client { get; }
-
-		private CancellationTokenSource CancelTokenSource { get; set; }
 
 		public SearchManager(ISearchClient client)
 		{
 			Client = client 
 				?? throw new ArgumentNullException(nameof(client));
-
-			CancelTokenSource = new CancellationTokenSource();
 		}
 
-		public void Start()
+		protected async override Task ExecuteAsync(CancellationToken stoppingToken)
 		{
-			Task.Run(async () =>
+			while (!stoppingToken.IsCancellationRequested)
 			{
-				while (!CancelTokenSource.IsCancellationRequested)
-				{
-					await Client.Search(CancelTokenSource.Token);
-				}
-			});
+				await Client.Search(stoppingToken);
+				await Task.Delay(TIMEOUT);
+			}
 		}
 
-		public void Stop() => 
-			CancelTokenSource.Cancel();
+		private const int TIMEOUT = 1000;
 	}
 }

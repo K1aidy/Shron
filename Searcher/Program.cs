@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Searcher.Abstractions;
 using Searcher.Api;
 using Searcher.Api.Extensions;
 using Searcher.Context;
@@ -14,21 +15,22 @@ namespace Searcher
 {
 	class Program
 	{
-		private const string hostSettings = "appsettings.json";
-		private const string connectionString = "Shron";
+		private const string HOST_SETTINGS = "appsettings.json";
+		private const string CONNECTION_STRING = "Shron";
+		private const string TICKET_SETTINGS = "TicketSearchSettings";
 
 		static async Task Main(string[] args)
 		{
 			var host = new HostBuilder()
 				.ConfigureHostConfiguration(configHost =>
 				{
-					configHost.SetBasePath(Directory.GetCurrentDirectory());
-					configHost.AddJsonFile(
-						hostSettings, 
-						optional: true, 
-						reloadOnChange: true);
-					//configHost.AddEnvironmentVariables(prefix: prefix);
-					configHost.AddCommandLine(args);
+					configHost.SetBasePath(Directory.GetCurrentDirectory())
+						.AddJsonFile(
+							HOST_SETTINGS,
+							optional: true,
+							reloadOnChange: true)
+						.AddCommandLine(args)
+						.Build();
 				})
 				.ConfigureServices((hostContext, services) =>
 				{
@@ -36,13 +38,24 @@ namespace Searcher
 					services.AddDbContext<ShronContext>(options => 
 						options.UseSqlServer(
 							hostContext.Configuration
-								.GetConnectionString(connectionString)));
+								.GetConnectionString(CONNECTION_STRING)));
 				})
 				.UseServiceProviderFactory(new AutofacServiceProviderFactory())
 				.ConfigureContainer<ContainerBuilder>((hostContext, builder) =>
 				{
 					builder
 						.UseTicketSearch(hostContext.Configuration);
+
+					builder
+						.RegisterType<TicketSearcher>();
+
+					builder.Register((ctx) =>
+						hostContext
+							.Configuration
+							.GetSection(TICKET_SETTINGS)
+							.Get<TicketSearchSettings>()
+					)
+					.As<ITicketSettings>();
 				})
 				.Build();
 

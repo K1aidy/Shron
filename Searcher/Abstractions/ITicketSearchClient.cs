@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Searcher.Abstractions
 {
-	public interface ISearchClient
+	public interface ITicketSearchClient
 	{
 		/// <summary>
 		/// Поиск

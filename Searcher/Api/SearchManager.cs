@@ -8,9 +8,9 @@ namespace Searcher.Api
 {
 	public class SearchManager : BackgroundService
 	{
-		private ISearchClient Client { get; }
+		private ITicketSearchClient Client { get; }
 
-		public SearchManager(ISearchClient client)
+		public SearchManager(ITicketSearchClient client)
 		{
 			Client = client 
 				?? throw new ArgumentNullException(nameof(client));

@@ -13,5 +13,6 @@ namespace Searcher.Domain
 		public String Description { get; set; }
 
 		public virtual List<DictItem> DictItems { get; set; }
+		public virtual List<Dimension> Dimensions { get; set; }
 	}
 }

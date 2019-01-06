@@ -6,9 +6,9 @@ using System.Collections.Generic;
 
 namespace Searcher.Api
 {
-	public class TicketSearcher
+	public class TicketReader : ITicketReader
 	{
-		public TicketSearcher(ITicketSettings searchSettings)
+		public TicketReader(ITicketSettings searchSettings)
 		{
 			Settings = searchSettings 
 				?? throw new System.ArgumentNullException(nameof(searchSettings));

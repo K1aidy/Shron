@@ -10,8 +10,10 @@ namespace Searcher.Api.Extensions
 			this ContainerBuilder builder,
 			IConfiguration configuration)
 		{
-			builder.RegisterType<SearchClient>()
-				.As<ISearchClient>();
+			builder.RegisterType<TicketSearchClient>()
+				.As<ITicketSearchClient>();
+			builder.RegisterType<TicketReader>()
+				.As<ITicketReader>();
 
 			return builder;
 		}

@@ -15,8 +15,8 @@ namespace Searcher.Domain
 		[ForeignKey("TechIndId")]
 		public TechnicalIndicator TechnicalIndicator { get; set; }
 
-		public Int32 DictItemId { get; set; }
-		[ForeignKey("DictItemId")]
-		public DictItem DictItem { get; set; }
+		public Int32 DictId { get; set; }
+		[ForeignKey("DictId")]
+		public Dict Dict { get; set; }
 	}
 }

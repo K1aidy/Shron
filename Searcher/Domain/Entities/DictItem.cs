@@ -16,7 +16,5 @@ namespace Searcher.Domain
 		public Int32 DictId { get; set; }
 		[ForeignKey("DictId")]
 		public Dict Dict { get; set; }
-
-		public virtual List<Dimension> Dimensions { get; set; }
 	}
 }

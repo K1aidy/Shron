@@ -46,9 +46,6 @@ namespace Searcher
 					builder
 						.UseTicketSearch(hostContext.Configuration);
 
-					builder
-						.RegisterType<TicketSearcher>();
-
 					builder.Register((ctx) =>
 						hostContext
 							.Configuration

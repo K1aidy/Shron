@@ -26,6 +26,7 @@ namespace Searcher.Context
 			RegisterTaskEntity(modelBuilder);
 			RegisterJobEntity(modelBuilder);
 			RegisterTaskDepenendenciesEntity(modelBuilder);
+			RegisterTaskStatusEntity(modelBuilder);
 		}
 
 		private void RegisterSheduleEntity(
@@ -58,12 +59,28 @@ namespace Searcher.Context
 			builder.Entity<Task>()
 				.HasOne(t => t.Shedule)
 				.WithMany(s => s.Tasks)
-				.HasForeignKey(t => t.SheduleId);
+				.HasForeignKey(t => t.SheduleId)
+				.HasConstraintName(FkEnums.tasks_shedule.GetDesc());
 
 			builder.Entity<Task>()
 				.HasOne(t => t.Job)
 				.WithMany(s => s.Tasks)
-				.HasForeignKey(t => t.JobId);
+				.HasForeignKey(t => t.JobId)
+				.HasConstraintName(FkEnums.tasks_job.GetDesc());
+
+			builder.Entity<Task>()
+				.HasMany(g => g.PrevDependencies)
+				.WithOne(s => s.ChildTask)
+				.HasForeignKey(s => s.ChildTaskId)
+				.OnDelete(DeleteBehavior.Restrict)
+				.HasConstraintName(FkEnums.tasks_deps_prev.GetDesc());
+
+			builder.Entity<Task>()
+				.HasMany(g => g.NextDependencies)
+				.WithOne(s => s.Task)
+				.HasForeignKey(s => s.TaskId)
+				.OnDelete(DeleteBehavior.Restrict)
+				.HasConstraintName(FkEnums.tasks_deps_next.GetDesc());
 
 			builder.Entity<Task>()
 				.Property(s => s.Id)
@@ -109,16 +126,6 @@ namespace Searcher.Context
 			builder.Entity<TaskDependency>()
 				.HasIndex(td => new { td.TaskId, td.ChildTaskId })
 				.IsUnique();
-
-			builder.Entity<TaskDependency>()
-				.HasOne(t => t.Task)
-				.WithMany(s => s.PrevDependencies)
-				.HasForeignKey(t => t.TaskId);
-
-			builder.Entity<TaskDependency>()
-				.HasOne(t => t.ChildTask)
-				.WithMany(s => s.NextDependencies)
-				.HasForeignKey(t => t.ChildTaskId);
 
 			builder.Entity<TaskDependency>()
 				.Property(s => s.Id)

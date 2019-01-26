@@ -35,7 +35,13 @@ namespace Searcher
 				.ConfigureServices((hostContext, services) =>
 				{
 					services.AddHostedService<SearchManager>();
+
 					services.AddDbContext<ShronContext>(options => 
+						options.UseSqlServer(
+							hostContext.Configuration
+								.GetConnectionString(CONNECTION_STRING)));
+
+					services.AddDbContext<SheduleContext>(options =>
 						options.UseSqlServer(
 							hostContext.Configuration
 								.GetConnectionString(CONNECTION_STRING)));
